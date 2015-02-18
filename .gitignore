@@ -6,5 +6,6 @@
 *.exe
 *.sublime-workspace
 *.sublime-project
+*.module
 bin
 lib

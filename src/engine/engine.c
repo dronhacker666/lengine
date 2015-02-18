@@ -19,7 +19,7 @@ bool le_load_module(LEngine* engine, wchar_t* module_name)
 	wprintf(L"Load module \"%ls\"\n", module_name);
 
 	char path[256];
-	wchar_t tpath[256] = L"../src/modules/";
+	wchar_t tpath[256] = L"modules/";
 	wcscat(tpath, module_name);
 	wcscat(tpath, L"/");
 	wcscat(tpath, module_name);

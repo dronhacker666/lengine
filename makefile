@@ -1,5 +1,6 @@
 export LIB_PATH = $(abspath lib)
 export BIN_PATH = $(abspath bin)
+export MODULES_OUT_PATH = $(BIN_PATH)/modules
 
 export ENGINE_PATH = $(abspath src/engine)
 PLAYER_PATH = $(abspath src/player)
@@ -15,6 +16,7 @@ all: player $(MODULES)
 
 $(LIB_PATH):; mkdir -p $@
 $(BIN_PATH):; mkdir -p $@
+$(MODULES_OUT_PATH):; mkdir -p $@
 
 player: $(BIN_PATH) engine 
 	$(MAKE) -C $(PLAYER_PATH)
@@ -22,7 +24,8 @@ player: $(BIN_PATH) engine
 engine: $(LIB_PATH)
 	$(MAKE) -C $(ENGINE_PATH)
 
-module_%: engine
+module_%: engine $(MODULES_OUT_PATH)
+	mkdir -p $(MODULES_OUT_PATH)/$(patsubst module_%,%,$@)
 	$(MAKE) -C $(patsubst module_%,$(MODULES_PATH)/%,$@)
 
 clean:

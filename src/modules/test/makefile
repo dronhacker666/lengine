@@ -1,4 +1,5 @@
-MODULE = $(notdir $(abspath .)).module
+NAME = $(notdir $(abspath .))
+MODULE = $(MODULES_OUT_PATH)/$(NAME)/$(NAME).module
 
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)

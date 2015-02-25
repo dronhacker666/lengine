@@ -1,4 +1,6 @@
-#include <engine.h>
+#include <lengine.h>
+
+#include <malloc.h>
 #include <dlfcn.h>
 
 bool le_init(LEngine* engine)
@@ -55,38 +57,6 @@ void le_push_module_msg(LEngine* engine, LEModule* module, LEMsgType type, void*
 		data: data,
 	};
 	module->push_msg(&msg);
-}
-
-
-/**
- * [createNode description]
- * @param  tagName [description]
- * @return         [description]
- */
-Node* le_node_create(const char* tag_name)
-{
-	Node* node = calloc(1, sizeof(Node));
-	node->tag_name = tag_name;
-	return node;
-}
-
-/**
- * [appendChild description]
- * @param parent [description]
- * @param child  [description]
- */
-void le_node_append_child(Node* parent, Node* child)
-{
-	parent->length++;
-	parent->children = realloc(parent->children, sizeof(Node*)*parent->length);
-	parent->children[parent->length-1] = child;
-
-	if(parent->length>1){
-		parent->children[parent->length-2]->next = child;
-		child->prev = parent->children[parent->length-2];
-	}
-
-	child->parent = parent;
 }
 
 // bool track_file(const char* file_name, void(*callback)(void))

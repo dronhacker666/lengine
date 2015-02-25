@@ -1,6 +1,6 @@
-#include <engine.h>
+#include <lengine.h>
 
-void renderTree(Node*, int);
+void renderTree(LENode*, int);
 
 
 void _receive_msg(LEMsg* msg)
@@ -19,18 +19,42 @@ void _receive_msg(LEMsg* msg)
 }
 
 
-void renderTree(Node* node, int depth)
+void renderTree(LENode* node, int depth)
 {
-	int i; for(i=0;i<depth;i++) wprintf(L"|  ");
+	
+	
 
-	if(node->length){
-		wprintf(L"%s(%i):\n", node->tag_name, node->length);
-		renderTree(node->children[0], depth+1);
-	}else{
-		wprintf(L"%s\n", node->tag_name);
+	LENode* cur = node;
+	while(cur){
+
+		int i; for(i=0;i<depth;i++) wprintf(L"  ");
+
+		wprintf(L"%s", cur->tag_name);
+
+		LENodeAttribute* attr = cur->attributes;
+		if(attr){
+			wprintf(L" (");
+			while(attr){
+				wprintf(L"%s:%s", attr->name, attr->value);
+				attr = attr->next;
+				if(attr){
+					wprintf(L" ");
+				}
+			}
+			wprintf(L")");
+		}
+
+		if(cur->length){
+			wprintf(L" {\n");
+			renderTree(cur->children[0], depth+1);
+
+			int i; for(i=0;i<depth;i++) wprintf(L"  ");
+			wprintf(L"}");
+		}
+
+		wprintf(L"\n");
+		cur = cur->next;
 	}
 
-	if(node->next){
-		renderTree(node->next, depth);
-	}
+
 }

@@ -1,0 +1,11 @@
+light(color:red, range:1000 )
+node(id:player, x:0, y:0){
+	camera
+	some(x:11)
+	asdfas
+	asdfasd {
+		asd
+		asd
+	}
+}
+model(src:model, x:100, y:200)

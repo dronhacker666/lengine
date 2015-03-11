@@ -6,7 +6,9 @@ light (
 	onFrame: main.js:lightOnFrame
 )
 
-box {
+BoX (
+	id: box
+){
 	mesh (
 		mesh: mesh.mesh
 		material: mesh.mat

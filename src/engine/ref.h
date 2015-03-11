@@ -3,9 +3,8 @@
 
 #include <malloc.h>
 #include <assert.h>
-#include <wchar.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
+#include <le_string.h>
 
 #endif

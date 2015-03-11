@@ -5,7 +5,7 @@
 
 bool le_init(LEngine* engine)
 {
-	engine->root = le_node_create("ROOT");
+	engine->root = le_node_create(L"ROOT");
 
 	wprintf(L"Engine init\n");
 }

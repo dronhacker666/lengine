@@ -1,11 +1,16 @@
-light(color:red, range:1000 )
-node(id:player, x:0, y:0){
-	camera
-	some(x:11)
-	asdfas
-	asdfasd {
-		asd
-		asd
-	}
+light (
+	color: #FFFFFF
+	range: 1000.20
+	rus_text: привет_мир
+	onInit: main.js:lightOnInit
+	onFrame: main.js:lightOnFrame
+)
+
+box {
+	mesh (
+		mesh: mesh.mesh
+		material: mesh.mat
+		onInit: main.js:meshOnInit
+	)
 }
-model(src:model, x:100, y:200)
+

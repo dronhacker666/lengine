@@ -21,26 +21,22 @@ void _receive_msg(LEMsg* msg)
 
 void renderTree(LENode* node, int depth)
 {
-	
-	
-
 	LENode* cur = node;
 	while(cur){
 
-		int i; for(i=0;i<depth;i++) wprintf(L"  ");
+		int i; for(i=0;i<depth;i++) wprintf(L"\t");
 
-		wprintf(L"%s", cur->tag_name);
+		wprintf(L"%ls", cur->tag_name);
 
 		LENodeAttribute* attr = cur->attributes;
 		if(attr){
-			wprintf(L" (");
+			wprintf(L" (\n");
 			while(attr){
-				wprintf(L"%s:%s", attr->name, attr->value);
+				for(i=0;i<depth+1;i++) wprintf(L"\t");
+				wprintf(L"%ls: %ls\n", attr->name, attr->value);
 				attr = attr->next;
-				if(attr){
-					wprintf(L" ");
-				}
 			}
+			for(i=0;i<depth;i++) wprintf(L"\t");
 			wprintf(L")");
 		}
 
@@ -48,13 +44,11 @@ void renderTree(LENode* node, int depth)
 			wprintf(L" {\n");
 			renderTree(cur->children[0], depth+1);
 
-			int i; for(i=0;i<depth;i++) wprintf(L"  ");
+			int i; for(i=0;i<depth;i++) wprintf(L"\t");
 			wprintf(L"}");
 		}
 
 		wprintf(L"\n");
 		cur = cur->next;
 	}
-
-
 }

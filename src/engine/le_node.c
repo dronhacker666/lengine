@@ -5,10 +5,12 @@
  * @param  tagName [description]
  * @return         [description]
  */
-LENode* le_node_create(const char* tag_name)
+LENode* le_node_create(const wchar_t* tag_name)
 {
+	static unsigned _id = 1;
 	LENode* node = calloc(1, sizeof(LENode));
-	node->tag_name = strdup(tag_name);
+	node->id = _id++;
+	node->tag_name = wcsdup(tag_name);
 	return node;
 }
 
@@ -35,14 +37,14 @@ void le_node_append_child(LENode* parent, LENode* child)
 }
 
 
-LENodeAttribute* le_node_get_attribute(LENode* node, const char* name)
+LENodeAttribute* le_node_get_attribute(LENode* node, const wchar_t* name)
 {
 	assert(node);
 	assert(name);
 
 	LENodeAttribute* cur = node->attributes;
 	while(cur){
-		if( strcmp(cur->name, name)==0 ){
+		if( wcscmp(cur->name, name)==0 ){
 			return cur;
 		}
 		cur = cur->next;
@@ -51,7 +53,7 @@ LENodeAttribute* le_node_get_attribute(LENode* node, const char* name)
 	return NULL;
 }
 
-void le_node_set_attribute(LENode* node, const char* name, size_t size, void* data)
+void le_node_set_attribute(LENode* node, const wchar_t* name, size_t size, void* data)
 {
 	assert(node);
 	assert(name);
@@ -67,9 +69,8 @@ void le_node_set_attribute(LENode* node, const char* name, size_t size, void* da
 		}
 		node->attributes = attr;
 
-		attr->name = strdup(name);
+		attr->name = wcsdup(name);
 	}
-
 
 	if(attr->value){
 		free(attr->value);

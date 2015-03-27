@@ -1,10 +1,10 @@
 #ifndef _LE_NODE_H_
 #define _LE_NODE_H_
 
-#include <ref.h>
+#include "ref.h"
 
 typedef struct LENodeAttribute {
-	const wchar_t* name;
+	wchar_t* name;
 	void* value;
 	struct LENodeAttribute* next;
 } LENodeAttribute;
@@ -16,11 +16,12 @@ typedef struct LENode {
 	struct LENode* parent;
 	struct LENode** children;
 	size_t length;
-	const wchar_t* tag_name;
+	wchar_t* tag_name;
 	LENodeAttribute* attributes;
 } LENode;
 
 LENode* le_node_create(const wchar_t*);
+void le_node_free(LENode**);
 void le_node_append_child(LENode*, LENode*);
 
 LENodeAttribute* le_node_get_attribute(LENode*, const wchar_t*);

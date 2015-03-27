@@ -5,6 +5,8 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <le_string.h>
+
+#include "le_os.h"
+#include "le_string.h"
 
 #endif

@@ -13,6 +13,16 @@
  */
 int fgettokwcs(FILE* fp, const wchar_t* allow, wchar_t* buffer);
 
+
+/**
+ * [fgettokwcsn description]
+ * @param  fp     [description]
+ * @param  allow  [description]
+ * @param  buffer [description]
+ * @return        [description]
+ */
+int fgettokwcsn(FILE* fp, const wchar_t* stop, wchar_t* buffer);
+
 /**
  * [wcinrange description]
  * @param  ch    [description]

@@ -1,12 +1,12 @@
 light (
 	color: #FFFFFF
 	range: 1000.20
-	rus_text: привет_мир
+	rus_text: "привет sas dfasdfa sdfasd мир"
 	onInit: main.js:lightOnInit
 	onFrame: main.js:lightOnFrame
 )
 
-BoX (
+box (
 	id: box
 ){
 	mesh (

@@ -1,23 +1,38 @@
-#include <lengine.h>
+#include "lengine.h"
 
 #include <malloc.h>
 #include <dlfcn.h>
 
-bool le_init(LEngine* engine)
+LEngine* le_create(void)
 {
+	LEngine* engine = calloc(1, sizeof(LEngine));
 	engine->root = le_node_create(L"ROOT");
-
-	wprintf(L"Engine init\n");
+	le_os_info(L"Engine init");
+	return engine;
 }
 
 bool le_run(LEngine* engine)
 {
-	wprintf(L"Engine run\n");
+	le_os_info(L"Engine run");
+	sleep(1);
 	return false;
+}
+
+void le_free(LEngine** engine)
+{
+	assert(*engine);
+
+	le_node_free(&(*engine)->root);
+	free(*engine);
+	*engine = NULL;
+	le_os_info(L"Engine end");
 }
 
 bool le_load_module(LEngine* engine, wchar_t* module_name)
 {
+	assert(engine);
+	assert(module_name);
+
 	wprintf(L"Load module \"%ls\"\n", module_name);
 
 	char path[256];
@@ -45,7 +60,7 @@ bool le_load_module(LEngine* engine, wchar_t* module_name)
 
 	le_push_module_msg(engine, module, MSG_RUN, NULL);
 
-	//dlclose(lib);
+	dlclose(lib);
 }
 
 

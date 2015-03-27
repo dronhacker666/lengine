@@ -11,6 +11,10 @@ $(BIN_PATH)/player: $(lastword $(MAKEFILE_LIST)) $(OBJ)
 clean:
 	rm -f $(BIN_PATH)/player
 	rm -f *.o
+	rm -f *.d
 
+include $(SRC:.c=.d)
+%.d: %.c
+	$(CC) -MM $< > $@
 %.o: %.c
 	$(CC) -c $< -o $@ -I$(ENGINE_PATH)

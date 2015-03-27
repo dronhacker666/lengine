@@ -1,12 +1,9 @@
-#include <le_node.h>
+#include "le_node.h"
 
-/**
- * [le_node_create description]
- * @param  tagName [description]
- * @return         [description]
- */
 LENode* le_node_create(const wchar_t* tag_name)
 {
+	assert(tag_name);
+
 	static unsigned _id = 1;
 	LENode* node = calloc(1, sizeof(LENode));
 	node->id = _id++;
@@ -14,11 +11,24 @@ LENode* le_node_create(const wchar_t* tag_name)
 	return node;
 }
 
-/**
- * [le_node_append_child description]
- * @param parent [description]
- * @param child  [description]
- */
+void le_node_free(LENode** node)
+{
+	assert(*node);
+
+	LENodeAttribute* attr = (*node)->attributes;
+	while(attr){
+		LENodeAttribute* t_attr = attr;
+		attr = attr->next;
+		free(t_attr->name);
+		free(t_attr->value);
+		free(t_attr);
+	};
+
+	free((*node)->tag_name);
+	free(*node);
+	*node = NULL;
+}
+
 void le_node_append_child(LENode* parent, LENode* child)
 {
 	assert(parent);
@@ -35,7 +45,6 @@ void le_node_append_child(LENode* parent, LENode* child)
 
 	child->parent = parent;
 }
-
 
 LENodeAttribute* le_node_get_attribute(LENode* node, const wchar_t* _name)
 {
@@ -61,10 +70,10 @@ void le_node_set_attribute(LENode* node, const wchar_t* name, size_t size, void*
 {
 	assert(node);
 	assert(name);
-
+	assert(size>0);
+	assert(data);
 
 	LENodeAttribute* attr = le_node_get_attribute(node, name);
-
 
 	if(!attr){
 		attr = calloc(1, sizeof(LENodeAttribute));

@@ -6,8 +6,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include <le_node.h>
-
+#include "le_node.h"
+#include "le_scene.h"
 
 typedef struct {
 	LENode* root;
@@ -27,14 +27,13 @@ typedef struct {
 } LEMsg;
 
 typedef struct {
-
 	void(*push_msg)(LEMsg*);
-
 } LEModule;
 
 
-bool le_init(LEngine*);
-bool le_run(LEngine*);
+LEngine* le_create(void);
+bool le_run(LEngine* asdasfasd);
+void le_free(LEngine**);
 bool le_load_module(LEngine*, wchar_t*);
 void le_push_module_msg(LEngine*, LEModule*, LEMsgType, void*);
 

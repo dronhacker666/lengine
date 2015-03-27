@@ -1,6 +1,6 @@
-#include <le_string.h>
+#include "le_string.h"
 
-int fgettokwcs(FILE* fp, const wchar_t* allow, wchar_t* buffer)
+static int _read_for (FILE* fp, int(*match)(wchar_t), wchar_t* buffer, int ret)
 {
 	const wchar_t* skip = L" \n\t\r";
 	wchar_t c;
@@ -15,10 +15,15 @@ int fgettokwcs(FILE* fp, const wchar_t* allow, wchar_t* buffer)
 	while(wcinrange(c=fgetwc(fp), skip)){}
 	ungetwc(c, fp);
 
-	while(!feof(fp) && wcinrange(c=fgetwc(fp), allow)){
+	while(!feof(fp)){
+		if(!match(c=fgetwc(fp))){
+			break;
+		}
 		*cur++ = c;
 	}
-	ungetwc(c, fp);
+	if(ret){
+		ungetwc(c, fp);
+	}
 
 	if(cur==buffer){
 		return 0;
@@ -27,6 +32,25 @@ int fgettokwcs(FILE* fp, const wchar_t* allow, wchar_t* buffer)
 		return 1;
 	}
 }
+
+
+int fgettokwcs(FILE* fp, const wchar_t* allow, wchar_t* buffer)
+{
+	int match(wchar_t c){
+		return wcinrange(c, allow);
+	}
+	return _read_for(fp, match, buffer, 1);
+}
+
+
+int fgettokwcsn(FILE* fp, const wchar_t* stop, wchar_t* buffer)
+{
+	int match(wchar_t c){
+		return !wcinrange(c, stop);
+	}
+	return _read_for(fp, match, buffer, 0);
+}
+
 
 int wcinrange(wchar_t ch, const wchar_t* range)
 {
@@ -40,6 +64,7 @@ int wcinrange(wchar_t ch, const wchar_t* range)
 	}while(*range++);
 	return 0;
 }
+
 
 wchar_t* wcstolower(wchar_t* p){
 	wchar_t* _p = p;

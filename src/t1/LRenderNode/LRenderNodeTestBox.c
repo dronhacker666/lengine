@@ -1,8 +1,10 @@
 #include "LRenderNodeTestBox.h"
 
-LRenderNodeTestBox* LRenderNodeTestBox_create(void)
+LRenderNodeTestBox* LRenderNodeTestBox_create(LRenderNode* node)
 {
-	LRenderNodeTestBox* node = calloc(1, sizeof(LRenderNodeTestBox));
+	node->need_draw = true;
+	
+	LRenderNodeTestBox* box = calloc(1, sizeof(LRenderNodeTestBox));
 
 	const float s = 1.0f;
 	const float vertexes[][5] = {
@@ -23,12 +25,12 @@ LRenderNodeTestBox* LRenderNodeTestBox_create(void)
 		20,23,21, 21,23,22  // right
 	};
 
-	glGenVertexArrays(1, &node->VAO);
-	glBindVertexArray(node->VAO);
+	glGenVertexArrays(1, &box->VAO);
+	glBindVertexArray(box->VAO);
 
-	glGenBuffers(2, node->VBO);
+	glGenBuffers(2, box->VBO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, node->VBO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, box->VBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexes), vertexes, GL_STATIC_DRAW);
 
 	GLint positionLocation = glGetAttribLocation(shader_program, "iPosition");
@@ -36,25 +38,25 @@ LRenderNodeTestBox* LRenderNodeTestBox_create(void)
 	glEnableVertexAttribArray(positionLocation);
 
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, node->VBO[1]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box->VBO[1]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	return node;
+	return box;
 }
 
-void LRenderNodeTestBox_free(LRenderNodeTestBox* node)
+void LRenderNodeTestBox_free(LRenderNodeTestBox* box)
 {
-	free(node);
+	free(box);
 }
 
-void LRenderNodeTestBox_draw(LRenderNodeTestBox* node)
+void LRenderNodeTestBox_draw(LRenderNodeTestBox* box)
 {
-	printf("draw node\n");
+	printf("draw box\n");
 
 	float color[3] = {1.0, 0.0, 0.0};
 	glUniform3fv(glGetUniformLocation(shader_program, "uColor"), 1, (const GLfloat*)&color);
 
-	glBindVertexArray(node->VAO);
+	glBindVertexArray(box->VAO);
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
 }

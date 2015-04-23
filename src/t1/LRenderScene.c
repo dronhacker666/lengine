@@ -3,23 +3,25 @@
 LRenderScene* LRenderScene_create(void)
 {
 	LRenderScene* scene = calloc(1, sizeof(LRenderScene));
-	scene->geometry = array_create();
-	scene->lights = array_create();
+	scene->predraw_node_list = array_create();
+	scene->draw_node_list = array_create();
 	return scene;
 }
 
 void LRenderScene_free(LRenderScene* scene)
 {
-	array_free(scene->geometry);
-	array_free(scene->lights);
+	array_free(scene->predraw_node_list);
+	array_free(scene->draw_node_list);
 	free(scene);
 }
 
 void LRenderScene_append_node(LRenderScene* scene, LRenderNode* node)
 {
-	switch(node->class){
-		case LRENDER_NODE_GEOMETRY: array_push(scene->geometry, &node); break;
-		case LRENDER_NODE_LIGHT: array_push(scene->lights, &node); break;
+	if(node->need_predraw){
+		array_push(scene->predraw_node_list, &node);
+	}
+	if(node->need_draw){
+		array_push(scene->draw_node_list, &node);
 	}
 }
 

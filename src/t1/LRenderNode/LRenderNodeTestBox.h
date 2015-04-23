@@ -18,7 +18,7 @@ struct LRenderNodeTestBox {
 	GLuint VBO[2];
 };
 
-LRenderNodeTestBox* 	LRenderNodeTestBox_create 	(void);
+LRenderNodeTestBox* 	LRenderNodeTestBox_create 	(LRenderNode*);
 void 					LRenderNodeTestBox_free 	(LRenderNodeTestBox*);
 void 					LRenderNodeTestBox_draw 	(LRenderNodeTestBox*);
 

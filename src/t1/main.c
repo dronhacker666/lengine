@@ -3,10 +3,13 @@
 int main(void)
 {
 	LRender* render = LRender_create();
-	LRenderCamera* camera = LRenderCamera_create();
-		gen_identity_mat4x4(camera->projection);
+	LRenderCamera* camera = render->camera;
 
 	LRenderScene* scene = LRenderScene_create();
+
+	LRenderNode* light1 = LRenderNode_create(LRENDER_NODE_DIRECT_LIGHT);
+	LRenderNode_set_position(light1, 0.0f, 2.0f, -10.0f);
+	LRenderScene_append_node(scene, light1);
 
 	LRenderNode* node1 = LRenderNode_create(LRENDER_NODE_TESTBOX);
 	LRenderNode_set_position(node1, 0.0f, 2.0f, -10.0f);
@@ -20,11 +23,10 @@ int main(void)
 	LRenderScene_wait_load(scene);
 
 
-	LRender_draw(render, scene, camera);
+	LRender_draw(render, scene);
 
 	sleep(2);
 
-	LRenderCamera_free(camera);
 	LRenderScene_free(scene);
 	LRender_free(render);
 

@@ -16,9 +16,9 @@ struct LRenderNodeDirectLight {
 	LRenderCamera* _camera;
 };
 
-LRenderNodeDirectLight* 	LRenderNodeDirectLight_create 	(void);
+LRenderNodeDirectLight* 	LRenderNodeDirectLight_create 	(LRenderNode*);
 void 						LRenderNodeDirectLight_free 	(LRenderNodeDirectLight*);
-void 						LRenderNodeDirectLight_draw 	(LRenderNodeDirectLight*);
+void 						LRenderNodeDirectLight_predraw 	(LRenderNodeDirectLight*, LRenderScene*);
 
 
 #endif

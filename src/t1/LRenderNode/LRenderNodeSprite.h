@@ -18,7 +18,7 @@ struct LRenderNodeSprite {
 	GLuint VBO;
 };
 
-LRenderNodeSprite* 	LRenderNodeSprite_create 	(void);
+LRenderNodeSprite* 	LRenderNodeSprite_create 	(LRenderNode*);
 void 				LRenderNodeSprite_free 		(LRenderNodeSprite*);
 void 				LRenderNodeSprite_draw 		(LRenderNodeSprite*);
 

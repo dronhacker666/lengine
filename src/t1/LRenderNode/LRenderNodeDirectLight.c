@@ -1,7 +1,9 @@
 #include "LRenderNodeDirectLight.h"
 
-LRenderNodeDirectLight* LRenderNodeDirectLight_create(void)
+LRenderNodeDirectLight* LRenderNodeDirectLight_create(LRenderNode* node)
 {
+	node->need_predraw = true;
+
 	LRenderNodeDirectLight* light = calloc(1, sizeof(LRenderNodeDirectLight));
 
 	light->_camera = LRenderCamera_create();
@@ -15,10 +17,10 @@ void LRenderNodeDirectLight_free(LRenderNodeDirectLight* light)
 	free(light);
 }
 
-void LRenderNodeDirectLight_draw(LRenderNodeDirectLight* light)
+void LRenderNodeDirectLight_predraw(LRenderNodeDirectLight* light, LRenderScene* scene)
 {
 	if(light->cast_shadow){
-
+		LRenderCamera_rasterization_scene(light->_camera, scene);
 	}
 }
 

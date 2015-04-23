@@ -3,16 +3,6 @@
 
 typedef struct LRenderNode LRenderNode;
 
-#include "../lrender.h"
-#include "LRenderNodeSprite.h"
-#include "LRenderNodeTestBox.h"
-#include "LRenderNodeDirectLight.h"
-
-typedef enum {
-	LRENDER_NODE_GEOMETRY,
-	LRENDER_NODE_LIGHT,
-} LRenderNodeClass;
-
 typedef enum {
 	LRENDER_NODE_TYPELESS,
 	LRENDER_NODE_TESTBOX,
@@ -20,14 +10,21 @@ typedef enum {
 	LRENDER_NODE_DIRECT_LIGHT,
 } LRenderNodeType;
 
+#include "../lrender.h"
+#include "LRenderNodeSprite.h"
+#include "LRenderNodeTestBox.h"
+#include "LRenderNodeDirectLight.h"
+
 /**
  * LRenderNode
  */
 
 struct LRenderNode {
-	LRenderNodeClass class;
 	LRenderNodeType type;
 	bool visible;
+	bool need_predraw;
+	bool need_draw;
+
 	Vec3 position;
 	Vec3 direction;
 	union {
@@ -40,6 +37,7 @@ struct LRenderNode {
 LRenderNode* 	LRenderNode_create 			(LRenderNodeType);
 void		 	LRenderNode_free 			(LRenderNode*);
 void 			LRenderNode_draw 			(LRenderNode*);
+void 			LRenderNode_predraw 		(LRenderNode*, LRenderScene*);
 
 void 			LRenderNode_set_position 	(LRenderNode*, float, float, float);
 

@@ -34,6 +34,9 @@ LRender* LRender_create(void)
 {
 	LRender* render = calloc(1, sizeof(LRender));
 
+	render->camera = LRenderCamera_create();
+	render->camera->target = LRenderTarget_create(LRENDER_TARGET_SCREEN, 800, 600);
+
 	info(L"Init Render");
 
 	init_opengl_context();
@@ -55,53 +58,25 @@ void LRender_free(LRender* render)
 	info(L"Free Render");
 	
 	free_opengl_context();
+
+	LRenderTarget_free(render->camera->target);
+	LRenderCamera_free(render->camera);
 	free(render);
 }
 
-static void LRender_rasterization(LRender* render, LRenderScene* scene, LRenderCamera* camera)
-{
-	glClearColor(0.8, 0.8, 0.8, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-/*	float aspectRatio = (float)camera->viewport.width / (float)camera->viewport.height;
-	ERenderMatrix.perspective4f(projectionMatrix, 45.0f, aspectRatio, 0.01f, 500.0f);
-
-	ERenderMatrix.translation4f(translationView, camera->position.x, camera->position.y, camera->position.z);
-	ERenderMatrix.rotation4f(rotationView, camera->rotation.x, camera->rotation.y, camera->rotation.z);
-	ERenderMatrix.mul4f(rotationView, rotationView, translationView);
-	ERenderMatrix.mul4f(viewProjectionMatrix, projectionMatrix, rotationView);*/
-
-	glUseProgram(shader_program);
-
-	Mat4x4 viewProjectionMatrix;
-
-	float aspectRatio = (float)600 / (float)600;
-
-	gen_perspective_mat4x4(viewProjectionMatrix, 45.0f, aspectRatio, 0.01f, 500.0f);
-
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "viewMatrix"), 1, GL_TRUE, (const GLfloat*)viewProjectionMatrix);
-
-	
-	LRenderNode** node;
-	array_rewind(scene->geometry);
-	while((node = array_next(scene->geometry))){
-		LRenderNode_draw(*node);
-	}
-}
-
-void LRender_draw(LRender* render, LRenderScene* scene, LRenderCamera* camera)
+void LRender_draw(LRender* render, LRenderScene* scene)
 {
 	// Prepare lights
 
 	LRenderNode** node;
-	array_rewind(scene->lights);
-	while((node = array_next(scene->lights))){
-		LRenderNode_draw(*node);
+
+	array_rewind(scene->predraw_node_list);
+	while((node = array_next(scene->predraw_node_list))){
+		LRenderNode_predraw(*node, scene);
 		// add light to light list
 	}
 
-	LRender_rasterization(render, scene, camera);
+	LRenderCamera_rasterization_scene(render->camera, scene);
 
 	swap_buffers();
 }

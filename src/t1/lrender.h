@@ -3,7 +3,6 @@
 
 typedef struct LRender LRender;
 typedef struct LRenderScene LRenderScene;
-typedef struct LRenderTarget LRenderTarget;
 typedef struct LRenderCamera LRenderCamera;
 
 #include <stdlib.h>
@@ -16,6 +15,7 @@ typedef struct LRenderCamera LRenderCamera;
 #include "../lib/lib.h"
 
 #include "LRenderNode/LRenderNode.h"
+#include "LRenderTarget/LRenderTarget.h"
 
 extern GLuint shader_program;
 
@@ -24,21 +24,21 @@ extern GLuint shader_program;
  */
 
 struct LRender {
-
+	LRenderCamera* camera;
 };
 
 LRender* 		LRender_create 			(void);
 void 			LRender_free 			(LRender*);
 
-void 			LRender_draw 			(LRender*, LRenderScene*, LRenderCamera*);
+void 			LRender_draw 			(LRender*, LRenderScene*);
 
 /**
  * LRenderScene
  */
 
 struct LRenderScene {
-	Array* geometry;
-	Array* lights;
+	Array* predraw_node_list;
+	Array* draw_node_list;
 };
 
 LRenderScene*	LRenderScene_create 		(void);
@@ -48,45 +48,23 @@ void 			LRenderScene_append_node 	(LRenderScene*, LRenderNode*);
 void 			LRenderScene_wait_load 		(LRenderScene*);
 
 
-/**
- * LRenderTarget
- */
-
-typedef enum {
-	LRENDER_TARGET_SCREEN,
-	LRENDER_TARGET_TEXTURE,
-	LRENDER_TARGET_GBUFFER,
-} LRenderTargetType;
-
-struct LRenderTarget {
-	LRenderTargetType type;
-	unsigned width;
-	unsigned height;
-	float fov;
-	float znear;
-	float zfar;
-};
-
-LRenderTarget*	LRenderTarget_create 	(void);
-void 			LRenderTarget_free 		(LRenderTarget*);
-
 
 /**
  * LRenderCamera
  */
 
 struct LRenderCamera {
-	Mat4x4 projection;
+	Mat4x4 view_matrix;
 	Vec3 position;
 	Vec3 direction;
-
+	float fov;
+	float znear;
+	float zfar;
 	LRenderTarget* target;
 };
 LRenderCamera*	LRenderCamera_create 	(void);
 void 			LRenderCamera_free 		(LRenderCamera*);
 
-void 			LRenderCamera_set_projection_matrix 	(LRenderCamera*, Mat4x4);
-void 			LRenderCamera_set_perspective_matrix 	(LRenderCamera*);
-void 			LRenderCamera_set_ortho_matrix 			(LRenderCamera*);
+void 			LRenderCamera_rasterization_scene 		(LRenderCamera*, LRenderScene*);
 
 #endif

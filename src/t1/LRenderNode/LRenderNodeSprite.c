@@ -1,7 +1,9 @@
 #include "LRenderNodeSprite.h"
 
-LRenderNodeSprite* LRenderNodeSprite_create(void)
+LRenderNodeSprite* LRenderNodeSprite_create(LRenderNode* node)
 {
+	node->need_draw = true;
+
 	LRenderNodeSprite* sprite = calloc(1, sizeof(LRenderNodeSprite));
 
 	float mesh[9] = {

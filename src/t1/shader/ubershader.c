@@ -6,7 +6,9 @@ static GLuint _compile_shader(GLenum type, const char* src)
 
 	size_t src_length = strlen(src);
 
-	glShaderSource(shader, 1, (const GLchar **)&src, (const GLint *)&src_length);
+	const char* sources[] = {src};
+
+	glShaderSource(shader, 1, (const GLchar**)sources, (const GLint *)&src_length);
 	glCompileShader(shader);
 
 	GLint status;

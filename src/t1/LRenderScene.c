@@ -17,14 +17,9 @@ void LRenderScene_free(LRenderScene* scene)
 
 void LRenderScene_append_node(LRenderScene* scene, LRenderNode* node)
 {
-	switch(node->type){
-		case LRENDER_NODE_SPRITE:
-			array_push(scene->geometry, &node);
-		break;
-		case LRENDER_NODE_LIGHT:
-			array_push(scene->lights, &node);
-		break;
-		default: break;
+	switch(node->class){
+		case LRENDER_NODE_GEOMETRY: array_push(scene->geometry, &node); break;
+		case LRENDER_NODE_LIGHT: array_push(scene->lights, &node); break;
 	}
 }
 

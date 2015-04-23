@@ -2,13 +2,14 @@
 
 #ifdef _WIN32
 	#define glGetProcAddress(NAME) wglGetProcAddress(NAME)
+	PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
 #elif __linux
 	#define glGetProcAddress(NAME) glXGetProcAddress((const GLubyte*)NAME)
+	PFNGLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB = NULL;
 #endif
 
 
 
-//PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
 
 // PFNGLACTIVETEXTUREPROC glActiveTexture = NULL;
 PFNGLGENERATEMIPMAPPROC glGenerateMipmap = NULL;

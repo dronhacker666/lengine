@@ -58,10 +58,8 @@ void LRender_free(LRender* render)
 	free(render);
 }
 
-void LRender_draw(LRender* render, LRenderScene* scene, LRenderCamera* camera)
+static void LRender_rasterization(LRender* render, LRenderScene* scene, LRenderCamera* camera)
 {
-	LRenderNode** node;
-
 	glClearColor(0.8, 0.8, 0.8, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -82,13 +80,28 @@ void LRender_draw(LRender* render, LRenderScene* scene, LRenderCamera* camera)
 
 	gen_perspective_mat4x4(viewProjectionMatrix, 45.0f, aspectRatio, 0.01f, 500.0f);
 
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "viewMatrix"), 1, GL_TRUE, (const GLfloat*)&viewProjectionMatrix);
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "viewMatrix"), 1, GL_TRUE, (const GLfloat*)viewProjectionMatrix);
 
+	
+	LRenderNode** node;
 	array_rewind(scene->geometry);
 	while((node = array_next(scene->geometry))){
 		LRenderNode_draw(*node);
 	}
+}
 
+void LRender_draw(LRender* render, LRenderScene* scene, LRenderCamera* camera)
+{
+	// Prepare lights
+
+	LRenderNode** node;
+	array_rewind(scene->lights);
+	while((node = array_next(scene->lights))){
+		LRenderNode_draw(*node);
+		// add light to light list
+	}
+
+	LRender_rasterization(render, scene, camera);
 
 	swap_buffers();
 }

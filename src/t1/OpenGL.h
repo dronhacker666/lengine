@@ -9,7 +9,12 @@
 GLint initOpenGLExt(void);
 
 /* OPENGL EXTENSIONS */
-//extern PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
+
+#ifdef _WIN32
+	extern PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribs;
+#elif __linux
+	extern PFNGLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB;
+#endif
 
 // extern PFNGLACTIVETEXTUREPROC glActiveTexture;
 extern PFNGLGENERATEMIPMAPPROC glGenerateMipmap;

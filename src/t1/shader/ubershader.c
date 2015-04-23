@@ -35,8 +35,7 @@ static void ubershader()
 		\
 		void main(void)\
 		{\
-			# gl_Position = viewMatrix * (modelMatrix * vec4(iPosition, 1.0));\
-			gl_Position = viewMatrix * vec4(iPosition, 1.0);\
+			gl_Position = viewMatrix * (modelMatrix * vec4(iPosition, 1.0));\
 			screenPosition = gl_Position.xy;\
 		}\
 	");

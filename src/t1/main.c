@@ -8,19 +8,21 @@ int main(void)
 
 	LRenderScene* scene = LRenderScene_create();
 
-	LRenderNode* node = LRenderNode_create(LRENDER_NODE_SPRITE);
-	LRenderNode_set_position(node, 0.0f, 0.0f, 0.0f);
-	LRenderNodeSprite_set_color(node->sprite, 1.0f, 0.2f, 0.3f);
-	LRenderScene_append_node(scene, node);
+	LRenderNode* node1 = LRenderNode_create(LRENDER_NODE_TESTBOX);
+	LRenderNode_set_position(node1, 0.0f, 2.0f, -10.0f);
+	LRenderScene_append_node(scene, node1);
+
+	LRenderNode* node2 = LRenderNode_create(LRENDER_NODE_TESTBOX);
+	LRenderNode_set_position(node2, 0.0f, -2.0f, -10.0f);
+	LRenderScene_append_node(scene, node2);
 
 
 	LRenderScene_wait_load(scene);
 
-	sleep(1);
+
 	LRender_draw(render, scene, camera);
-	sleep(1);
-	LRender_draw(render, scene, camera);
-	sleep(1);
+
+	sleep(2);
 
 	LRenderCamera_free(camera);
 	LRenderScene_free(scene);

@@ -1,4 +1,4 @@
-#include "lrender.h"
+#include "LRenderNodeSprite.h"
 
 LRenderNodeSprite* LRenderNodeSprite_create(void)
 {

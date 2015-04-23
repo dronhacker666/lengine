@@ -1,6 +1,11 @@
 #ifndef _L_RENDER_H_
 #define _L_RENDER_H_
 
+typedef struct LRender LRender;
+typedef struct LRenderScene LRenderScene;
+typedef struct LRenderTarget LRenderTarget;
+typedef struct LRenderCamera LRenderCamera;
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -10,14 +15,9 @@
 #include "lmath.h"
 #include "../lib/lib.h"
 
+#include "LRenderNode/LRenderNode.h"
+
 extern GLuint shader_program;
-
-typedef struct LRender LRender;
-typedef struct LRenderScene LRenderScene;
-typedef struct LRenderCamera LRenderCamera;
-
-typedef struct LRenderNode LRenderNode;
-typedef struct LRenderNodeSprite LRenderNodeSprite;
 
 /**
  * LRender
@@ -49,62 +49,44 @@ void 			LRenderScene_wait_load 		(LRenderScene*);
 
 
 /**
+ * LRenderTarget
+ */
+
+typedef enum {
+	LRENDER_TARGET_SCREEN,
+	LRENDER_TARGET_TEXTURE,
+	LRENDER_TARGET_GBUFFER,
+} LRenderTargetType;
+
+struct LRenderTarget {
+	LRenderTargetType type;
+	unsigned width;
+	unsigned height;
+	float fov;
+	float znear;
+	float zfar;
+};
+
+LRenderTarget*	LRenderTarget_create 	(void);
+void 			LRenderTarget_free 		(LRenderTarget*);
+
+
+/**
  * LRenderCamera
  */
 
 struct LRenderCamera {
 	Mat4x4 projection;
 	Vec3 position;
+	Vec3 direction;
+
+	LRenderTarget* target;
 };
 LRenderCamera*	LRenderCamera_create 	(void);
 void 			LRenderCamera_free 		(LRenderCamera*);
 
-
-
-/**
- * LRenderNode
- */
-
-typedef enum {
-	LRENDER_NODE_TYPELESS,
-	LRENDER_NODE_SPRITE,
-	LRENDER_NODE_LIGHT,
-} LRenderNodeType;
-
-struct LRenderNode {
-	LRenderNodeType type;
-	Vec3 position;
-	Vec3 direction;
-	bool ready;
-	union {
-		LRenderNodeSprite* sprite;
-	};
-};
-
-LRenderNode* 	LRenderNode_create 			(LRenderNodeType);
-void		 	LRenderNode_free 			(LRenderNode*);
-
-void 			LRenderNode_draw 			(LRenderNode*);
-void 			LRenderNode_set_position 	(LRenderNode*, float, float, float);
-
-/**
- * LRenderNodeSprite
- */
-struct LRenderNodeSprite {
-	wchar_t* file_name;
-	Vec3 color;
-	unsigned width;
-	unsigned height;
-
-	GLuint VAO;
-	GLuint VBO;
-};
-
-LRenderNodeSprite* 	LRenderNodeSprite_create 	(void);
-void 				LRenderNodeSprite_free 		(LRenderNodeSprite*);
-
-void 				LRenderNodeSprite_draw 		(LRenderNodeSprite*);
-void 				LRenderNodeSprite_set_color (LRenderNodeSprite*, float, float, float);
-bool 				LRenderNodeSprite_set_image (LRenderNodeSprite*, const wchar_t*);
+void 			LRenderCamera_set_projection_matrix 	(LRenderCamera*, Mat4x4);
+void 			LRenderCamera_set_perspective_matrix 	(LRenderCamera*);
+void 			LRenderCamera_set_ortho_matrix 			(LRenderCamera*);
 
 #endif

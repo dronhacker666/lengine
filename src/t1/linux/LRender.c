@@ -4,7 +4,7 @@
 
 static Display                 *dpy;
 static Window                  root;
-static GLint                   att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+static GLint                   att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, GL_TRUE, None };
 static XVisualInfo             *vi;
 static Colormap                cmap;
 static XSetWindowAttributes    swa;

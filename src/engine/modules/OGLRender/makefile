@@ -1,0 +1,1 @@
+LIBS += X11 GL GLU

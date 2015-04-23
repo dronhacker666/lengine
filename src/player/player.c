@@ -1,4 +1,4 @@
-#include <lengine.h>
+#include <core/lengine.h>
 #include <locale.h>
 
 int main(void)
@@ -7,8 +7,6 @@ int main(void)
 
 	LEngine* engine = le_create();
 	le_scene_load("../res/test.scene", engine->root);
-
-	//le_load_module(engine, L"test");
 
 	while(le_run(engine)){}
 

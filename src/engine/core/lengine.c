@@ -7,7 +7,10 @@ LEngine* le_create(void)
 {
 	LEngine* engine = calloc(1, sizeof(LEngine));
 	engine->root = le_node_create(L"ROOT");
+
 	le_os_info(L"Engine init");
+	le_init_modules(engine);
+
 	return engine;
 }
 
@@ -73,6 +76,20 @@ void le_push_module_msg(LEngine* engine, LEModule* module, LEMsgType type, void*
 	};
 	module->push_msg(&msg);
 }
+
+
+
+
+bool le_add_system_handler(LEngine* engine, LESystemEventType event_type , LESystemHandler handler)
+{
+	handler(engine, 1);
+}
+
+
+
+
+
+
 
 // bool track_file(const char* file_name, void(*callback)(void))
 // {

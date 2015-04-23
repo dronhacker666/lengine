@@ -13,7 +13,7 @@ clean:
 	rm -f *.o
 	rm -f *.d
 
-include $(SRC:.c=.d)
+-include $(SRC:.c=.d)
 %.d: %.c
 	$(CC) -MM $< > $@
 %.o: %.c

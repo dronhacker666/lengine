@@ -5,10 +5,8 @@ LRenderCamera* LRenderCamera_create(void)
 	LRenderCamera* camera = calloc(1, sizeof(LRenderCamera));
 
 	camera->fov = 45.0f;
-	camera->znear = 0.001f;
-	camera->zfar = 500.0f;
-
-	gen_perspective_mat4x4(camera->view_matrix, camera->fov, /*aspectRatio*/1.0f, camera->znear, camera->zfar);
+	camera->znear = 1.0f;
+	camera->zfar = 3000.0f;
 
 	return camera;
 }
@@ -18,10 +16,32 @@ void LRenderCamera_free(LRenderCamera* camera)
 	free(camera);
 }
 
-void LRenderCamera_rasterization_scene(LRenderCamera* camera, LRenderScene* scene)
+void LRenderCamera_rasterization_scene(LRenderCamera* camera, LRenderScene* scene, LRenderTarget* target)
 {
-	glClearColor(0.8, 0.8, 0.8, 1.0);
+	glClearDepth(1.0f);
+	glClearColor(0.6, 0.6, 0.6, 0.0);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+
+	gen_perspective_mat4x4(
+		camera->view_matrix,
+		camera->fov,
+		(float)target->width / (float)target->height,
+		camera->znear,
+		camera->zfar
+	);
+
+	glUseProgram(shader_program);
+	glBindFramebuffer(GL_FRAMEBUFFER, target->FBO);
+
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+
 
 
 /*	float aspectRatio = (float)camera->viewport.width / (float)camera->viewport.height;
@@ -32,8 +52,7 @@ void LRenderCamera_rasterization_scene(LRenderCamera* camera, LRenderScene* scen
 	ERenderMatrix.mul4f(rotationView, rotationView, translationView);
 	ERenderMatrix.mul4f(viewProjectionMatrix, projectionMatrix, rotationView);*/
 
-	glUseProgram(shader_program);
-
+	
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "viewMatrix"), 1, GL_TRUE, (const GLfloat*)camera->view_matrix);
 	
 	LRenderNode** node;
@@ -41,4 +60,8 @@ void LRenderCamera_rasterization_scene(LRenderCamera* camera, LRenderScene* scen
 	while((node = array_next(scene->draw_node_list))){
 		LRenderNode_draw(*node);
 	}
+
+	glDisable(GL_DEPTH_TEST);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

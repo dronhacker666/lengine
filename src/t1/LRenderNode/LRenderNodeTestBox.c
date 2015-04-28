@@ -6,7 +6,7 @@ LRenderNodeTestBox* LRenderNodeTestBox_create(LRenderNode* node)
 	
 	LRenderNodeTestBox* box = calloc(1, sizeof(LRenderNodeTestBox));
 
-	const float s = 1.0f;
+	const float s = 50.0f;
 	const float vertexes[][5] = {
 		{-s, s, s,  0.0f,1.0f}, { s, s, s,  1.0f,1.0f}, { s,-s, s,  1.0f,0.0f}, {-s,-s, s,  0.0f,0.0f}, // front
 		{ s, s,-s,  0.0f,1.0f}, {-s, s,-s,  1.0f,1.0f}, {-s,-s,-s,  1.0f,0.0f}, { s,-s,-s,  0.0f,0.0f}, // back
@@ -41,6 +41,8 @@ LRenderNodeTestBox* LRenderNodeTestBox_create(LRenderNode* node)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box->VBO[1]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+	glBindVertexArray(0);
+
 	return box;
 }
 
@@ -57,6 +59,6 @@ void LRenderNodeTestBox_draw(LRenderNodeTestBox* box)
 	glUniform3fv(glGetUniformLocation(shader_program, "uColor"), 1, (const GLfloat*)&color);
 
 	glBindVertexArray(box->VAO);
-
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+	glBindVertexArray(0);
 }

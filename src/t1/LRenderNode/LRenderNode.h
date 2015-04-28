@@ -26,7 +26,7 @@ struct LRenderNode {
 	bool need_draw;
 
 	Vec3 position;
-	Vec3 direction;
+	Vec3 rotation;
 	union {
 		LRenderNodeDirectLight* direct_light;
 		LRenderNodeTestBox* testbox;
@@ -37,8 +37,9 @@ struct LRenderNode {
 LRenderNode* 	LRenderNode_create 			(LRenderNodeType);
 void		 	LRenderNode_free 			(LRenderNode*);
 void 			LRenderNode_draw 			(LRenderNode*);
-void 			LRenderNode_predraw 		(LRenderNode*, LRenderScene*);
+void 			LRenderNode_predraw 		(LRenderNode*, LRender*, LRenderScene*);
 
 void 			LRenderNode_set_position 	(LRenderNode*, float, float, float);
+void 			LRenderNode_set_rotation 	(LRenderNode*, float, float, float);
 
 #endif

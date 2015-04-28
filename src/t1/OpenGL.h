@@ -21,8 +21,14 @@ extern PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
 
 //FBO
 extern PFNGLGENFRAMEBUFFERSPROC 		glGenFramebuffers;
+extern PFNGLDELETEFRAMEBUFFERSPROC      glDeleteFramebuffers;
+extern PFNGLGENRENDERBUFFERSPROC 		glGenRenderbuffers;
 extern PFNGLBINDFRAMEBUFFERPROC 		glBindFramebuffer;
-extern PFNGLFRAMEBUFFERTEXTUREPROC 		glFramebufferTexture;
+extern PFNGLBINDRENDERBUFFERPROC 		glBindRenderbuffer;
+extern PFNGLRENDERBUFFERSTORAGEPROC 	glRenderbufferStorage;
+extern PFNGLFRAMEBUFFERRENDERBUFFERPROC glFramebufferRenderbuffer;
+extern PFNGLBINDFRAMEBUFFERPROC 		glBindFramebuffer;
+extern PFNGLFRAMEBUFFERTEXTURE2DPROC 	glFramebufferTexture2D;
 extern PFNGLDRAWBUFFERSPROC 			glDrawBuffers;
 extern PFNGLBINDFRAGDATALOCATIONPROC 	glBindFragDataLocation;
 

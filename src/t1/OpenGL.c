@@ -15,11 +15,16 @@
 PFNGLGENERATEMIPMAPPROC glGenerateMipmap = NULL;
 
 //FBO
-PFNGLGENFRAMEBUFFERSPROC 		glGenFramebuffers 	 = NULL;
-PFNGLBINDFRAMEBUFFERPROC 		glBindFramebuffer 	 = NULL;
-PFNGLFRAMEBUFFERTEXTUREPROC 	glFramebufferTexture = NULL;
-PFNGLDRAWBUFFERSPROC 			glDrawBuffers = NULL;
-PFNGLBINDFRAGDATALOCATIONPROC 	glBindFragDataLocation = NULL;
+PFNGLGENFRAMEBUFFERSPROC 			glGenFramebuffers 	 		= NULL;
+PFNGLDELETEFRAMEBUFFERSPROC     	glDeleteFramebuffers 		= NULL;
+PFNGLGENRENDERBUFFERSPROC 			glGenRenderbuffers 			= NULL;
+PFNGLBINDFRAMEBUFFERPROC 			glBindFramebuffer 			= NULL;
+PFNGLBINDRENDERBUFFERPROC 			glBindRenderbuffer 			= NULL;
+PFNGLRENDERBUFFERSTORAGEPROC 		glRenderbufferStorage 		= NULL;
+PFNGLFRAMEBUFFERRENDERBUFFERPROC 	glFramebufferRenderbuffer 	= NULL;
+PFNGLFRAMEBUFFERTEXTURE2DPROC 		glFramebufferTexture2D 		= NULL;
+PFNGLDRAWBUFFERSPROC 				glDrawBuffers 				= NULL;
+PFNGLBINDFRAGDATALOCATIONPROC 		glBindFragDataLocation 		= NULL;
 // VAO
 PFNGLGENVERTEXARRAYSPROC    glGenVertexArrays    = NULL;
 PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays = NULL;
@@ -70,8 +75,13 @@ GLint initOpenGLExt(void)
 	
 	//FBO
 	glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)glGetProcAddress("glGenFramebuffers");
+	glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)glGetProcAddress("glDeleteFramebuffers");
+	glGenRenderbuffers = (PFNGLGENRENDERBUFFERSPROC)glGetProcAddress("glGenRenderbuffers");
 	glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)glGetProcAddress("glBindFramebuffer");
-	glFramebufferTexture = (PFNGLFRAMEBUFFERTEXTUREPROC)glGetProcAddress("glFramebufferTexture");
+	glBindRenderbuffer = (PFNGLBINDRENDERBUFFERPROC)glGetProcAddress("glBindRenderbuffer");
+	glRenderbufferStorage = (PFNGLRENDERBUFFERSTORAGEPROC)glGetProcAddress("glRenderbufferStorage");
+	glFramebufferRenderbuffer = (PFNGLFRAMEBUFFERRENDERBUFFERPROC)glGetProcAddress("glFramebufferRenderbuffer");
+	glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC)glGetProcAddress("glFramebufferTexture2D");
 	glDrawBuffers = (PFNGLDRAWBUFFERSPROC)glGetProcAddress("glDrawBuffers");
 	glBindFragDataLocation = (PFNGLBINDFRAGDATALOCATIONPROC)glGetProcAddress("glBindFragDataLocation");
 	//VAO

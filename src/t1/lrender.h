@@ -15,7 +15,8 @@ typedef struct LRenderCamera LRenderCamera;
 #include "../lib/lib.h"
 
 #include "LRenderNode/LRenderNode.h"
-#include "LRenderTarget/LRenderTarget.h"
+#include "LRenderTarget.h"
+#include "LRenderShader.h"
 
 extern GLuint shader_program;
 
@@ -25,6 +26,17 @@ extern GLuint shader_program;
 
 struct LRender {
 	LRenderCamera* camera;
+	LRenderTarget* target;
+
+#ifdef _WIN32
+
+#elif __linux
+	Display* display;
+	Window root;
+	Window window;
+	GLXContext opengl_context;
+	XVisualInfo* vi;
+#endif
 };
 
 LRender* 		LRender_create 			(void);
@@ -60,11 +72,10 @@ struct LRenderCamera {
 	float fov;
 	float znear;
 	float zfar;
-	LRenderTarget* target;
 };
 LRenderCamera*	LRenderCamera_create 	(void);
 void 			LRenderCamera_free 		(LRenderCamera*);
 
-void 			LRenderCamera_rasterization_scene 		(LRenderCamera*, LRenderScene*);
+void 			LRenderCamera_rasterization_scene 		(LRenderCamera*, LRenderScene*, LRenderTarget*);
 
 #endif

@@ -27,10 +27,10 @@ void LRenderNode_free(LRenderNode* node)
 	free(node);
 }
 
-void LRenderNode_predraw(LRenderNode* node, LRenderScene* scene)
+void LRenderNode_predraw(LRenderNode* node, LRender* render, LRenderScene* scene)
 {
 	switch(node->type){
-		case LRENDER_NODE_DIRECT_LIGHT: LRenderNodeDirectLight_predraw(node->direct_light, scene); break;
+		case LRENDER_NODE_DIRECT_LIGHT: LRenderNodeDirectLight_predraw(node->direct_light, render, scene); break;
 		default: break;
 	}
 }
@@ -38,7 +38,12 @@ void LRenderNode_predraw(LRenderNode* node, LRenderScene* scene)
 void LRenderNode_draw(LRenderNode* node)
 {
 	Mat4x4 model_view;
+	Mat4x4 rotation_mat;
 	gen_translation_mat4x4(model_view, node->position[0], node->position[1], node->position[2]);
+	gen_rotation_mat4x4(rotation_mat, node->rotation[0], node->rotation[1], node->rotation[2]);
+
+	multiple_mat4x4(model_view, model_view, rotation_mat);
+
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "modelMatrix"), 1, GL_TRUE, (const GLfloat*)model_view);
 
 	switch(node->type){
@@ -53,4 +58,11 @@ void LRenderNode_set_position(LRenderNode* node, float x, float y, float z)
 	node->position[0] = x;
 	node->position[1] = y;
 	node->position[2] = z;
+}
+
+void LRenderNode_set_rotation(LRenderNode* node, float x, float y, float z)
+{
+	node->rotation[0] = x;
+	node->rotation[1] = y;
+	node->rotation[2] = z;
 }

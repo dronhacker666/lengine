@@ -17,10 +17,10 @@ void LRenderNodeDirectLight_free(LRenderNodeDirectLight* light)
 	free(light);
 }
 
-void LRenderNodeDirectLight_predraw(LRenderNodeDirectLight* light, LRenderScene* scene)
+void LRenderNodeDirectLight_predraw(LRenderNodeDirectLight* light, LRender* render, LRenderScene* scene)
 {
 	if(light->cast_shadow){
-		LRenderCamera_rasterization_scene(light->_camera, scene);
+		//LRenderCamera_rasterization_scene(light->_camera, scene, NULL);
 	}
 }
 

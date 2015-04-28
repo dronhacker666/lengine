@@ -44,7 +44,12 @@ void LRenderNode_draw(LRenderNode* node)
 
 	multiple_mat4x4(model_view, model_view, rotation_mat);
 
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "modelMatrix"), 1, GL_TRUE, (const GLfloat*)model_view);
+	//glUseProgram(node->shader->program);
+
+	GLuint program;
+	glGetIntegerv(GL_CURRENT_PROGRAM, &program);
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "modelMatrix"), 1, GL_TRUE, (const GLfloat*)model_view);
 
 	switch(node->type){
 		case LRENDER_NODE_TESTBOX: 	LRenderNodeTestBox_draw(node->testbox); break;

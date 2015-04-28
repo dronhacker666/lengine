@@ -25,6 +25,8 @@ struct LRenderNode {
 	bool need_predraw;
 	bool need_draw;
 
+	LRenderShader* shader;
+
 	Vec3 position;
 	Vec3 rotation;
 	union {

@@ -1,80 +1,148 @@
 #include "LRenderShader.h"
 
-#define SHADER_TYPE_COUNT 2
-static struct _Parts {
-	const char* sufix;
-	GLuint type;
-} parts[SHADER_TYPE_COUNT] = {
-	{"fsh", GL_FRAGMENT_SHADER},
-	{"vsh", GL_VERTEX_SHADER},
-};
+static GLuint default_vertex_shader = 0;
+static GLuint default_fragment_shader = 0;
 
-static GLuint _compile_shader(GLenum type, const char* src);
+static GLuint _compile_shader(GLenum, const char*);
+static GLuint _compile_from_file_shader(GLenum, const char*);
+static bool _validate(LRenderShader*);
+static bool _link_program(LRenderShader*);
+static bool _set_shader(LRenderShader*, GLenum, GLuint);
 
+/**
+ * [LRenderShader_create description]
+ * @return  [description]
+ */
 LRenderShader* LRenderShader_create(void)
 {
 	LRenderShader* shader = calloc(1, sizeof(LRenderShader));
 	shader->program = glCreateProgram();
-	return shader;
+	shader->vertex = default_vertex_shader;
+	shader->fragment = default_fragment_shader;
+
+	if(_link_program(shader)){
+		return shader;
+	}else{
+		LRenderShader_free(shader);
+		return NULL;
+	}
 }
 
+/**
+ * [LRenderShader_free description]
+ * @param shader [description]
+ */
 void LRenderShader_free(LRenderShader* shader)
 {
 	glDeleteProgram(shader->program);
 	free(shader);
 }
 
-LRenderShader* LRenderShader_create_from_file(const char* file_name)
+/**
+ * [LRenderShader_use_as_default description]
+ * @param  type      [description]
+ * @param  file_name [description]
+ * @return           [description]
+ */
+bool LRenderShader_use_as_default(GLenum type, const char* file_name)
 {
-	LRenderShader* shader = LRenderShader_create();
-	if(LRenderShader_from_file(shader, file_name)){
-		return shader;
+	GLuint* target;
+	switch(type){
+		case GL_FRAGMENT_SHADER: target = &default_fragment_shader; break;
+		case GL_VERTEX_SHADER: target = &default_vertex_shader; break;
+		default: return false;
 	}
-	LRenderShader_free(shader);
-	return NULL;
+
+	*target = _compile_from_file_shader(type, file_name);
+	return *target ? true : false;
 }
 
-bool LRenderShader_from_file(LRenderShader* shader, const char* file_name)
+
+bool LRenderShader_load_default(LRenderShader* shader, GLenum type)
 {
-	char full_name[1024];
-
-	glUseProgram(shader->program);
-
-	for(int i=0; i<SHADER_TYPE_COUNT; i++){
-		sprintf(full_name, "%s.%s", file_name, parts[i].sufix);
-		char* content = fgetcontent(full_name);
-
-		GLuint shader_part= _compile_shader(parts[i].type, content);
-		glAttachShader(shader->program, shader_part);
-		glDeleteShader(shader_part);
-
-		free(content);
+	switch(type){
+		case GL_FRAGMENT_SHADER:
+			_set_shader(shader, type, default_fragment_shader);
+		break;
+		case GL_VERTEX_SHADER:
+			_set_shader(shader, type, default_vertex_shader);
+		break;
+		default: return false;
 	}
+	return _link_program(shader);
+}
 
-	//----------
-
-	char buffer[1024];
-	GLint status;
-
-	glLinkProgram(shader->program);
-	glGetProgramiv(shader->program, GL_LINK_STATUS, &status);
-	if (status != GL_TRUE){
-		glGetProgramInfoLog(shader->program, 1024, 0, buffer);
-		printf("Shader Program Link Error: %s\n", buffer);
-		return false;
+bool LRenderShader_load(LRenderShader* shader, GLenum type, const char* file_name)
+{
+	GLuint id = _compile_from_file_shader(type, file_name);
+	if(id){
+		if(_set_shader(shader, type, id)){
+			return _link_program(shader);
+		}
 	}
+	return false;
+}
 
-	glValidateProgram(shader->program);
-	glGetProgramiv(shader->program, GL_VALIDATE_STATUS, &status);
-	if (status != GL_TRUE){
-		glGetProgramInfoLog(shader->program, 1024, 0, buffer);
-		printf("Shader Program Validate Error: %s\n", buffer);
-		return false;
+static bool _set_shader(LRenderShader* shader, GLenum type, GLuint id)
+{
+	switch(type){
+		case GL_FRAGMENT_SHADER:
+			glDetachShader(shader->program, shader->fragment);
+			glDeleteShader(shader->fragment);
+			shader->fragment = id;
+		break;
+		case GL_VERTEX_SHADER:
+			glDetachShader(shader->program, shader->vertex);
+			glDeleteShader(shader->vertex);
+			shader->vertex = id;
+		break;
+		default: return false;
 	}
-
 	return true;
 }
 
+
+
+/**
+ * [_link_program description]
+ * @param  shader [description]
+ * @return        [description]
+ */
+static bool _link_program(LRenderShader* shader)
+{
+	glUseProgram(shader->program);
+	glAttachShader(shader->program, shader->vertex);
+	glAttachShader(shader->program, shader->fragment);
+	glLinkProgram(shader->program);
+
+	glUseProgram(0);
+
+	return _validate(shader);
+}
+
+/**
+ * [_compile_from_file_shader description]
+ * @param  type      [description]
+ * @param  file_name [description]
+ * @return           [description]
+ */
+static GLuint _compile_from_file_shader(GLenum type, const char* file_name)
+{
+	if(access(file_name, R_OK)==0){
+		char* content = fgetcontent(file_name);
+		GLuint shader = _compile_shader(type, content);
+		free(content);
+		return shader;
+	}
+	return 0;
+}
+
+/**
+ * [_compile_shader description]
+ * @param  type [description]
+ * @param  src  [description]
+ * @return      [description]
+ */
 static GLuint _compile_shader(GLenum type, const char* src)
 {
 	GLuint shader = glCreateShader(type);
@@ -95,4 +163,31 @@ static GLuint _compile_shader(GLenum type, const char* src)
 	}
 
 	return shader;
+}
+
+/**
+ * [_validate description]
+ * @param  shader [description]
+ * @return        [description]
+ */
+static bool _validate(LRenderShader* shader)
+{
+	char buffer[1024];
+	GLint status;
+
+	glGetProgramiv(shader->program, GL_LINK_STATUS, &status);
+	if (status != GL_TRUE){
+		glGetProgramInfoLog(shader->program, 1024, 0, buffer);
+		printf("Shader Program Link Error: %s\n", buffer);
+		return false;
+	}
+
+	glValidateProgram(shader->program);
+	glGetProgramiv(shader->program, GL_VALIDATE_STATUS, &status);
+	if (status != GL_TRUE){
+		glGetProgramInfoLog(shader->program, 1024, 0, buffer);
+		printf("Shader Program Validate Error: %s\n", buffer);
+		return false;
+	}
+	return true;
 }

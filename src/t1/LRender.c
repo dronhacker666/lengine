@@ -48,14 +48,21 @@ LRender* LRender_create(void)
 	initOpenGLExt();
 	print_opengl_info();
 
-	render->camera = LRenderCamera_create();
+
 	render->target = LRenderTarget_create(800, 600);
 
-	//LRenderCamera_use_shader(render->camera, LRenderShader_create_from_file(""));
+	render->camera = LRenderCamera_create();
+	//LRenderCamera_set_target(render->camera, render->target);
+
+
+	//LRenderCamera_set_shader(render->camera, LRenderShader_create_from_file(""));
 
 	info(L"Compile ubershader");
 
-	ubershader = LRenderShader_create_from_file("shader/ubershader");
+	LRenderShader_use_as_default(GL_VERTEX_SHADER, "shader/ubershader.vert");
+	LRenderShader_use_as_default(GL_FRAGMENT_SHADER, "shader/ubershader.frag");
+	ubershader = LRenderShader_create();
+
 
 	shader_program = ubershader->program;
 
@@ -78,7 +85,7 @@ void LRender_draw(LRender* render, LRenderScene* scene)
 	LRenderNode** node;
 	array_rewind(scene->predraw_node_list);
 	while((node = array_next(scene->predraw_node_list))){
-		//LRenderNode_predraw(*node, render, scene);
+		LRenderNode_predraw(*node, render, scene);
 	}
 
 	LRenderCamera_rasterization_scene(render->camera, scene, render->target);
@@ -102,7 +109,9 @@ static void _init_render_to_screen(void)
 		{-1.0f,-1.0f,  0.0f,0.0f},
 	};
 
-	shader = LRenderShader_create_from_file("shader/finish");
+	shader = LRenderShader_create();
+	LRenderShader_load(shader, GL_VERTEX_SHADER, "shader/finish.vert");
+	LRenderShader_load(shader, GL_FRAGMENT_SHADER, "shader/finish.frag");
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);

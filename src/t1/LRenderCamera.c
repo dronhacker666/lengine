@@ -18,42 +18,33 @@ void LRenderCamera_free(LRenderCamera* camera)
 
 void LRenderCamera_rasterization_scene(LRenderCamera* camera, LRenderScene* scene, LRenderTarget* target)
 {
+	Mat4x4 view_matrix;
+	Mat4x4 translation_matrix;
+	Mat4x4 rotation_matrix;
+
+	gen_perspective_mat4x4(view_matrix, camera->fov, (float)target->width / (float)target->height, camera->znear, camera->zfar);
+	gen_translation_mat4x4(translation_matrix, camera->position[0], camera->position[1], camera->position[2]);
+	gen_rotation_mat4x4(rotation_matrix, camera->rotation[0], camera->rotation[1], camera->rotation[2]);
+
+	multiple_mat4x4(rotation_matrix, rotation_matrix, translation_matrix);
+	multiple_mat4x4(view_matrix, view_matrix, rotation_matrix);
+
+	glUseProgram(shader_program);
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "viewMatrix"), 1, GL_TRUE, (const GLfloat*)view_matrix);
+
+
 	glClearDepth(1.0f);
 	glClearColor(0.6, 0.6, 0.6, 0.0);
-	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 
+	glEnable (GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 
-	gen_perspective_mat4x4(
-		camera->view_matrix,
-		camera->fov,
-		(float)target->width / (float)target->height,
-		camera->znear,
-		camera->zfar
-	);
-
-	glUseProgram(shader_program);
 	glBindFramebuffer(GL_FRAMEBUFFER, target->FBO);
-
-	
+	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-
-
-
-/*	float aspectRatio = (float)camera->viewport.width / (float)camera->viewport.height;
-	ERenderMatrix.perspective4f(projectionMatrix, 45.0f, aspectRatio, 0.01f, 500.0f);
-
-	ERenderMatrix.translation4f(translationView, camera->position.x, camera->position.y, camera->position.z);
-	ERenderMatrix.rotation4f(rotationView, camera->rotation.x, camera->rotation.y, camera->rotation.z);
-	ERenderMatrix.mul4f(rotationView, rotationView, translationView);
-	ERenderMatrix.mul4f(viewProjectionMatrix, projectionMatrix, rotationView);*/
-
-	
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "viewMatrix"), 1, GL_TRUE, (const GLfloat*)camera->view_matrix);
 	
 	LRenderNode** node;
 	array_rewind(scene->draw_node_list);
@@ -62,6 +53,5 @@ void LRenderCamera_rasterization_scene(LRenderCamera* camera, LRenderScene* scen
 	}
 
 	glDisable(GL_DEPTH_TEST);
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

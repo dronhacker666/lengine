@@ -33,13 +33,12 @@ LRenderNodeTestBox* LRenderNodeTestBox_create(LRenderNode* node)
 	glBindBuffer(GL_ARRAY_BUFFER, box->VBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexes), vertexes, GL_STATIC_DRAW);
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box->VBO[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 	GLint positionLocation = glGetAttribLocation(shader_program, "iPosition");
 	glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), 0);
 	glEnableVertexAttribArray(positionLocation);
-
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box->VBO[1]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 
@@ -53,10 +52,11 @@ void LRenderNodeTestBox_free(LRenderNodeTestBox* box)
 
 void LRenderNodeTestBox_draw(LRenderNodeTestBox* box)
 {
-	printf("draw box\n");
+	GLuint program;
+	glGetIntegerv(GL_CURRENT_PROGRAM, &program);
 
 	float color[3] = {1.0, 0.0, 0.0};
-	glUniform3fv(glGetUniformLocation(shader_program, "uColor"), 1, (const GLfloat*)&color);
+	glUniform3fv(glGetUniformLocation(program, "uColor"), 1, (const GLfloat*)&color);
 
 	glBindVertexArray(box->VAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);

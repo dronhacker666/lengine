@@ -21,12 +21,29 @@ int main(void)
 	LRenderNode_set_rotation(node2, 0.0f, 30.0f, 50.0f);
 	LRenderScene_append_node(scene, node2);
 
-
 	LRenderScene_wait_load(scene);
 
-	sleep(1);
-	LRender_draw(render, scene);
-	sleep(2);
+
+	unsigned frames = 0;
+	while(frames < 300){
+
+		LRenderNode_set_rotation(node2,
+			node2->rotation[0] + 1.0,
+			node2->rotation[1] + 10.1,
+			node2->rotation[2] + 0.8
+		);
+
+		LRenderNode_set_rotation(node1,
+			node1->rotation[0] + 1.0,
+			node1->rotation[1] - 2.1,
+			node1->rotation[2] + 0.8
+		);
+
+		LRender_draw(render, scene);
+		usleep(10000);
+		frames++;
+	}
+
 
 	LRenderScene_free(scene);
 	LRender_free(render);

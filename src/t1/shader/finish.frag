@@ -10,5 +10,5 @@ void main(void)
 	float f = 3000.0;
 	float c = (2.0 * n) / (f + n - z * (f - n));
 
-	gl_FragColor.rgb = vec3(c);
+	gl_FragColor = vec4(c, c, c, 0.6);
 }

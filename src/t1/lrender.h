@@ -8,15 +8,17 @@ typedef struct LRenderCamera LRenderCamera;
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdint.h>
+#include <unistd.h>
 
 #include "OpenGL.h"
 
 #include "lmath.h"
 #include "../lib/lib.h"
 
-#include "LRenderNode/LRenderNode.h"
-#include "LRenderTarget.h"
 #include "LRenderShader.h"
+#include "LRenderTarget.h"
+#include "LRenderNode/LRenderNode.h"
 
 extern GLuint shader_program;
 
@@ -66,9 +68,8 @@ void 			LRenderScene_wait_load 		(LRenderScene*);
  */
 
 struct LRenderCamera {
-	Mat4x4 view_matrix;
 	Vec3 position;
-	Vec3 direction;
+	Vec3 rotation;
 	float fov;
 	float znear;
 	float zfar;

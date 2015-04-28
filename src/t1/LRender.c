@@ -36,6 +36,7 @@ static void print_opengl_info(void)
 }
 
 GLuint shader_program;
+LRenderShader* ubershader;
 
 LRender* LRender_create(void)
 {
@@ -54,8 +55,8 @@ LRender* LRender_create(void)
 
 	info(L"Compile ubershader");
 
-	LRenderShader* ubershader = LRenderShader_create();
-	LRenderShader_from_file(ubershader, "shader/ubershader");
+	ubershader = LRenderShader_create_from_file("shader/ubershader");
+
 	shader_program = ubershader->program;
 
 	_init_render_to_screen();
@@ -66,7 +67,7 @@ LRender* LRender_create(void)
 void LRender_free(LRender* render)
 {
 	info(L"Free Render");
-	
+	LRenderShader_free(ubershader);
 	LRenderCamera_free(render->camera);
 	_free_opengl_context(render);
 	free(render);
@@ -101,8 +102,7 @@ static void _init_render_to_screen(void)
 		{-1.0f,-1.0f,  0.0f,0.0f},
 	};
 
-	shader = LRenderShader_create();
-	LRenderShader_from_file(shader, "shader/finish");
+	shader = LRenderShader_create_from_file("shader/finish");
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);

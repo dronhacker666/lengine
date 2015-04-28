@@ -1,7 +1,15 @@
 #include "LRenderShader.h"
 
-static GLuint _compile_shader(GLenum type, const char* src);
+#define SHADER_TYPE_COUNT 2
+static struct _Parts {
+	const char* sufix;
+	GLuint type;
+} parts[SHADER_TYPE_COUNT] = {
+	{"fsh", GL_FRAGMENT_SHADER},
+	{"vsh", GL_VERTEX_SHADER},
+};
 
+static GLuint _compile_shader(GLenum type, const char* src);
 
 LRenderShader* LRenderShader_create(void)
 {
@@ -12,28 +20,33 @@ LRenderShader* LRenderShader_create(void)
 
 void LRenderShader_free(LRenderShader* shader)
 {
+	glDeleteProgram(shader->program);
 	free(shader);
+}
+
+LRenderShader* LRenderShader_create_from_file(const char* file_name)
+{
+	LRenderShader* shader = LRenderShader_create();
+	if(LRenderShader_from_file(shader, file_name)){
+		return shader;
+	}
+	LRenderShader_free(shader);
+	return NULL;
 }
 
 bool LRenderShader_from_file(LRenderShader* shader, const char* file_name)
 {
-	struct _Parts {
-		const char* sufix;
-		GLuint type;
-	} parts[] = {
-		{"fsh", GL_FRAGMENT_SHADER},
-		{"vsh", GL_VERTEX_SHADER},
-	};
-
 	char full_name[1024];
 
 	glUseProgram(shader->program);
 
-	for(int i=0; i<sizeof(parts)/sizeof(struct _Parts); i++){
+	for(int i=0; i<SHADER_TYPE_COUNT; i++){
 		sprintf(full_name, "%s.%s", file_name, parts[i].sufix);
 		char* content = fgetcontent(full_name);
 
-		glAttachShader(shader->program, _compile_shader(parts[i].type, content));
+		GLuint shader_part= _compile_shader(parts[i].type, content);
+		glAttachShader(shader->program, shader_part);
+		glDeleteShader(shader_part);
 
 		free(content);
 	}
@@ -48,7 +61,7 @@ bool LRenderShader_from_file(LRenderShader* shader, const char* file_name)
 	if (status != GL_TRUE){
 		glGetProgramInfoLog(shader->program, 1024, 0, buffer);
 		printf("Shader Program Link Error: %s\n", buffer);
-		exit(1);
+		return false;
 	}
 
 	glValidateProgram(shader->program);
@@ -56,8 +69,10 @@ bool LRenderShader_from_file(LRenderShader* shader, const char* file_name)
 	if (status != GL_TRUE){
 		glGetProgramInfoLog(shader->program, 1024, 0, buffer);
 		printf("Shader Program Validate Error: %s\n", buffer);
-		exit(1);
-	}	
+		return false;
+	}
+
+	return true;
 }
 
 static GLuint _compile_shader(GLenum type, const char* src)

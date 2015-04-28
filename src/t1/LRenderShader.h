@@ -12,6 +12,7 @@ struct LRenderShader {
 LRenderShader* 	LRenderShader_create 		(void);
 void 			LRenderShader_free 			(LRenderShader*);
 
-bool 			LRenderShader_from_file 	(LRenderShader*, const char*);
+bool 			LRenderShader_from_file 		(LRenderShader*, const char*);
+LRenderShader* 	LRenderShader_create_from_file 	(const char*);
 
 #endif

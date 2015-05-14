@@ -14,7 +14,8 @@ struct LRenderTarget {
 	unsigned height;
 
 	GLuint FBO;
-	GLuint color;
+	GLuint color0;
+	GLuint color1;
 	GLuint depth;
 };
 

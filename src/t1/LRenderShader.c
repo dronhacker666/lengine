@@ -129,7 +129,7 @@ static bool _link_program(LRenderShader* shader)
 static GLuint _compile_from_file_shader(GLenum type, const char* file_name)
 {
 	if(access(file_name, R_OK)==0){
-		char* content = fgetcontent(file_name);
+		char* content = fgetcontent(file_name, NULL);
 		GLuint shader = _compile_shader(type, content);
 		free(content);
 		return shader;

@@ -8,12 +8,14 @@ typedef enum {
 	LRENDER_NODE_TESTBOX,
 	LRENDER_NODE_SPRITE,
 	LRENDER_NODE_DIRECT_LIGHT,
+	LRENDER_NODE_MESH,
 } LRenderNodeType;
 
 #include "../lrender.h"
 #include "LRenderNodeSprite.h"
 #include "LRenderNodeTestBox.h"
 #include "LRenderNodeDirectLight.h"
+#include "LRenderNodeMesh.h"
 
 /**
  * LRenderNode
@@ -33,6 +35,7 @@ struct LRenderNode {
 		LRenderNodeDirectLight* direct_light;
 		LRenderNodeTestBox* testbox;
 		LRenderNodeSprite* sprite;
+		LRenderNodeMesh* mesh;
 	};
 };
 

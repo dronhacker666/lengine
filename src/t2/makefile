@@ -1,4 +1,4 @@
 
 all:
-	$(CC) *.c -o run -fms-extensions
+	$(CC) *.c -o run
 	./run

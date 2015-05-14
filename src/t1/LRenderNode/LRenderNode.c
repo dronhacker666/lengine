@@ -7,9 +7,10 @@ LRenderNode* LRenderNode_create(LRenderNodeType type)
 	node->type = type;
 
 	switch(node->type){
-		case LRENDER_NODE_DIRECT_LIGHT: node->direct_light = LRenderNodeDirectLight_create(node); break;
-		case LRENDER_NODE_TESTBOX: 		node->testbox = LRenderNodeTestBox_create(node); break;
-		case LRENDER_NODE_SPRITE: 		node->sprite = LRenderNodeSprite_create(node); break;
+		case LRENDER_NODE_DIRECT_LIGHT: node->direct_light = LRenderNodeDirectLight_create(node); 	break;
+		case LRENDER_NODE_TESTBOX: 		node->testbox = LRenderNodeTestBox_create(node); 			break;
+		case LRENDER_NODE_SPRITE: 		node->sprite = LRenderNodeSprite_create(node); 				break;
+		case LRENDER_NODE_MESH: 		node->mesh = LRenderNodeMesh_create(node); 					break;
 		default: break;
 	}
 
@@ -22,6 +23,7 @@ void LRenderNode_free(LRenderNode* node)
 		case LRENDER_NODE_DIRECT_LIGHT: 	LRenderNodeDirectLight_free(node->direct_light); 	break;
 		case LRENDER_NODE_TESTBOX: 			LRenderNodeTestBox_free(node->testbox); 			break;
 		case LRENDER_NODE_SPRITE: 			LRenderNodeSprite_free(node->sprite); 				break;
+		case LRENDER_NODE_MESH: 			LRenderNodeMesh_free(node->mesh); 					break;
 		default: break;
 	}
 	free(node);
@@ -46,7 +48,7 @@ void LRenderNode_draw(LRenderNode* node)
 
 	//glUseProgram(node->shader->program);
 
-	GLuint program;
+	GLint program;
 	glGetIntegerv(GL_CURRENT_PROGRAM, &program);
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "modelMatrix"), 1, GL_TRUE, (const GLfloat*)model_view);
@@ -54,6 +56,7 @@ void LRenderNode_draw(LRenderNode* node)
 	switch(node->type){
 		case LRENDER_NODE_TESTBOX: 	LRenderNodeTestBox_draw(node->testbox); break;
 		case LRENDER_NODE_SPRITE: 	LRenderNodeSprite_draw(node->sprite); 	break;
+		case LRENDER_NODE_MESH: 	LRenderNodeMesh_draw(node->mesh); 		break;
 		default: break;
 	}
 }

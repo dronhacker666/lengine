@@ -5,8 +5,8 @@ LRenderCamera* LRenderCamera_create(void)
 	LRenderCamera* camera = calloc(1, sizeof(LRenderCamera));
 
 	camera->fov = 45.0f;
-	camera->znear = 1.0f;
-	camera->zfar = 3000.0f;
+	camera->znear = 0.0f;
+	camera->zfar = 1000.0f;
 
 	return camera;
 }
@@ -32,17 +32,22 @@ void LRenderCamera_rasterization_scene(LRenderCamera* camera, LRenderScene* scen
 	glUseProgram(shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "viewMatrix"), 1, GL_TRUE, (const GLfloat*)view_matrix);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, target->FBO);
+
+	GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+	glDrawBuffers(2, buffers);
 
 	glClearDepth(1.0f);
-	glClearColor(0.6, 0.6, 0.6, 0.0);
-	glDepthFunc(GL_LEQUAL);
+	glClearColor(0.6, 0.6, 0.6, 1.0);
 
-	glEnable (GL_BLEND);
+	glEnable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 
-	glBindFramebuffer(GL_FRAMEBUFFER, target->FBO);
+	
+	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -53,5 +58,7 @@ void LRenderCamera_rasterization_scene(LRenderCamera* camera, LRenderScene* scen
 	}
 
 	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

@@ -14,16 +14,19 @@ OPENGL_EXT += glFramebufferTexture2D
 OPENGL_EXT += glDrawBuffers
 OPENGL_EXT += glBindFragDataLocation
 OPENGL_EXT += glCheckFramebufferStatus
+
 # VAO
 OPENGL_EXT += glGenVertexArrays
 OPENGL_EXT += glDeleteVertexArrays
 OPENGL_EXT += glBindVertexArray
+
 # VBO
 OPENGL_EXT += glGenBuffers
 OPENGL_EXT += glDeleteBuffers
 OPENGL_EXT += glBindBuffer
 OPENGL_EXT += glBufferData
 OPENGL_EXT += glBufferSubData
+
 # Shaders
 OPENGL_EXT += glCreateProgram
 OPENGL_EXT += glDeleteProgram
@@ -40,11 +43,13 @@ OPENGL_EXT += glAttachShader
 OPENGL_EXT += glDetachShader
 OPENGL_EXT += glGetShaderiv
 OPENGL_EXT += glGetShaderInfoLog
+
 # Shaders attributes
 OPENGL_EXT += glGetAttribLocation
 OPENGL_EXT += glVertexAttribPointer
 OPENGL_EXT += glEnableVertexAttribArray
 OPENGL_EXT += glDisableVertexAttribArray
+
 # Shaders uniforms
 OPENGL_EXT += glGetUniformLocation
 OPENGL_EXT += glUniformMatrix4fv

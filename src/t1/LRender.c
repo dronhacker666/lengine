@@ -130,7 +130,6 @@ static void _init_render_to_screen(void)
 	glVertexAttribPointer(iTexCoord, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), (const GLvoid*)(2*sizeof(float)) );
 	glEnableVertexAttribArray(iTexCoord);
 
-	//glUniform1i(glGetUniformLocation(shader->program, "iTex0") , 0 /*GL_TEXTURE0*/);
 }
 
 static void _render_to_screen(LRender* render, LRenderTarget* target)
@@ -138,11 +137,23 @@ static void _render_to_screen(LRender* render, LRenderTarget* target)
 	glUseProgram(shader->program);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	glUniform1i(glGetUniformLocation(shader->program, "colorTex0") , 0);
+	glUniform1i(glGetUniformLocation(shader->program, "colorTex1") , 1);
+	glUniform1i(glGetUniformLocation(shader->program, "depthTex") , 2);
+
+	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, target->color0);
 
-	//glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, target->color1);
+
+	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, target->depth);
+
+	glActiveTexture(0);
 
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);

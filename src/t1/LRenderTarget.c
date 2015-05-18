@@ -10,7 +10,7 @@ LRenderTarget* LRenderTarget_create(unsigned width, unsigned height)
 	glBindTexture(GL_TEXTURE_2D, target->depth);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, target->width, target->height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, target->width, target->height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glGenTextures(1, &target->color0);
@@ -20,6 +20,7 @@ LRenderTarget* LRenderTarget_create(unsigned width, unsigned height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, target->width, target->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glGenTextures(1, &target->color1);
@@ -33,6 +34,7 @@ LRenderTarget* LRenderTarget_create(unsigned width, unsigned height)
 
 	glGenFramebuffers(1, &target->FBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, target->FBO);
+	
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, target->color0, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, target->color1, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, target->depth, 0);

@@ -116,9 +116,9 @@ obj_t* obj_load(const char* file_name)
 			array_push(vertex, &_vertex[0]);
 			array_push(vertex, &_vertex[1]);
 			array_push(vertex, &_vertex[2]);
-			array_push(vertex, &_vertex[0]);
 			array_push(vertex, &_vertex[2]);
 			array_push(vertex, &_vertex[3]);
+			array_push(vertex, &_vertex[0]);
 
 			continue;
 		}

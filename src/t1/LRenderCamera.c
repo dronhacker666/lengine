@@ -5,7 +5,7 @@ LRenderCamera* LRenderCamera_create(void)
 	LRenderCamera* camera = calloc(1, sizeof(LRenderCamera));
 
 	camera->fov = 45.0f;
-	camera->znear = 0.0f;
+	camera->znear = 0.01f;
 	camera->zfar = 1000.0f;
 
 	return camera;
@@ -45,9 +45,9 @@ void LRenderCamera_rasterization_scene(LRenderCamera* camera, LRenderScene* scen
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-
 	
 	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_DEPTH_CLAMP);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -59,6 +59,7 @@ void LRenderCamera_rasterization_scene(LRenderCamera* camera, LRenderScene* scen
 
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_CLAMP);
 	glDisable(GL_CULL_FACE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

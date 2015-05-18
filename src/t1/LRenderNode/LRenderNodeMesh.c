@@ -28,6 +28,7 @@ void LRenderNodeMesh_draw(LRenderNodeMesh* mesh)
 	glGetIntegerv(GL_CURRENT_PROGRAM, &program);
 
 	glBindVertexArray(mesh->VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
 
 	GLint iPosition = glGetAttribLocation(program, "iPosition");
 	glVertexAttribPointer(iPosition, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), 0);

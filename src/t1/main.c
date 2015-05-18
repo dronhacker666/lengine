@@ -11,6 +11,10 @@ int main(void)
 	LRenderNode_set_position(light1, 0.0f, 2.0f, -50.0f);
 	LRenderScene_append_node(scene, light1);
 
+	LRenderNode* node2 = LRenderNode_create(LRENDER_NODE_TESTBOX);
+	LRenderNode_set_position(node2, 0.0f, 0.0f, -10.0f);
+	LRenderScene_append_node(scene, node2);
+
 	LRenderNode* node1 = LRenderNode_create(LRENDER_NODE_MESH);
 	LRenderNode_set_position(node1, 0.0f, 0.0f, -10.0f);
 	LRenderScene_append_node(scene, node1);
